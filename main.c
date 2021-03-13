@@ -12,6 +12,7 @@ const int num_of_threads = 3;
 int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
 #define num_of_elems 10
 int final_arr[num_of_elems];
+
 typedef struct {
     int left;
     int right;
@@ -85,6 +86,12 @@ void *sorter(void *params)
 	// 3. Hand off to sorting algorithm.
     InsertionSort(array, l, r);
 
+    int x;
+    for(x=l; x<r; x++)
+    {
+            final_arr[x]=orig_arr[x] ;
+    }
+
     pthread_exit(0);
 }
 
@@ -138,6 +145,7 @@ void *merger(void *params)
         }
     }
     int a;
+    printf("\n");
 
     for(a=0; a < num_of_elems; a++)
     {
@@ -145,4 +153,3 @@ void *merger(void *params)
     }
     pthread_exit(0);
 }
-

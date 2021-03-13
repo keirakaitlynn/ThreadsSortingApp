@@ -26,12 +26,12 @@ void InsertionSort(arr *array, int l, int r);
 int main (int argc, const char * argv[])
 {
 	// ORIGINAL ARRAY:
-	printf("ORIGINAL ARRAY: {");
+	printf("ORIGINAL ARRAY: { ");
 	int i;
 	for (i = 0; i < num_of_elems; i++) {
-	    printf("%d, ", orig_arr[i]);
+	    printf("%d ", orig_arr[i]);
 	}
-	printf("}");
+	printf("}\n");
 
     pthread_t threads[num_of_threads]; // 3 threads total
     int middle = (num_of_elems / 2);

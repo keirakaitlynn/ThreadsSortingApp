@@ -10,7 +10,7 @@
 const int num_of_threads = 3;
 
 int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
-const int num_of_elems = sizeof(orig_arr);
+#define num_of_elems 10
 int final_arr[num_of_elems];
 typedef struct {
     int left;

@@ -7,27 +7,67 @@
 #include <stdlib.h>
 
 
-const int num_of_threads = 2;
+const int num_of_threads = 3;
 
 int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
 const int num_of_elems = sizeof(orig_arr);
 int final_arr[num_of_elems];
 typedef struct {
     int left;
-    int right
+    int right;
 } arr;
 
 
 void *sorter(void *params);	/* thread that performs basic sorting algorithm */
 void *merger(void *params);	/* thread that performs merging of results */
 
-
-
 void InsertionSort(arr *array, int l, int r);
 
 int main (int argc, const char * argv[])
 {
-	//Your code here
+	// ORIGINAL ARRAY:
+	printf("ORIGINAL ARRAY: {");
+	int i;
+	for (i = 0; i < num_of_elems; i++) {
+	    printf("%d, ", orig_arr[i]);
+	}
+	printf("}");
+
+    pthread_t threads[num_of_threads]; // 3 threads total
+    int middle = (num_of_elems / 2);
+
+    // 1. thread to sort first half
+    arr* array = (arr *) malloc(num_of_elems / sizeof(arr)*2);
+    (*array).left = 0; // first index
+    (*array).right = middle - 1; // midpoint
+    pthread_create(&threads[0], 0, sorter, array); // (1/3) threads
+
+    // 2. thread to sort second half
+    array = (arr *)malloc(num_of_elems / sizeof(arr)*2);
+    (*array).left = middle; // midpoint
+    (*array).right = num_of_elems - 1; // last index
+    pthread_create(&threads[1], 0, sorter, array); // (2/3) threads
+
+    // let 2 threads finish sorting each half before continuing
+    for (i = 0; i < 2; i++) {
+        pthread_join(threads[i], NULL);
+    } // --------------------------------------------------------------------------
+
+    // 3. thread to merge halves into final_arr
+    // allocate size of thread
+    array = (arr *) malloc(num_of_elems / sizeof(arr)*2);
+    // assign sorted array into new int arrIndex
+    (*array).left = 0;
+    // assign half the size of array to arrayOutdex
+    (*array).right = middle - 1;
+    // merge array using specific thread
+    pthread_create(&threads[2], 0, merger, array); // (3/3) threads
+
+    // let thread finish merging before continuing
+    pthread_join(threads[2], NULL); // -------------------------------------
+
+    // output the sorted array
+    return 0;
 }
 
 /**
@@ -45,7 +85,7 @@ void *sorter(void *params)
 	// 3. Hand off to sorting algorithm.
     InsertionSort(array, l, r);
 
-    return NULL;
+    pthread_exit(0);
 }
 
 void InsertionSort(arr *array, int l, int r) {
@@ -69,8 +109,40 @@ void InsertionSort(arr *array, int l, int r) {
  * Merge thread
  */
 
+// Merge the two arrays
 void *merger(void *params)
 {
-	// TODO: Your code here
+    arr* p = (arr *)params;
+
+    //MERGE
+    int start = p -> left;
+    int stop = p ->  right + 1;
+    int i;
+    int j;
+    int k;
+
+    // if index is less than end point, move on
+    for(i=start; i< stop; i++)
+    {
+        for(j=start; j< stop-i; j++)
+        {
+            if(final_arr[j] > final_arr[j+1])
+            {
+                // set new point to current sorted index
+                k = final_arr[j];
+                // swap index positions with position 1 to the right
+                final_arr[j] = final_arr[j+1];
+                // swap index positions
+                final_arr[j+1] = k;
+            }
+        }
+    }
+    int a;
+
+    for(a=0; a < num_of_elems; a++)
+    {
+        printf("Final sorted array is: %d\n", final_arr[a]);
+    }
+    pthread_exit(0);
 }
 

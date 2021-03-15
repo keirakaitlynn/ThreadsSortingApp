@@ -9,8 +9,8 @@
 
 const int num_of_threads = 3;
 
-int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
-//int orig_arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8};
+//int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
+int orig_arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8};
 #define num_of_elems 10
 int final_arr[num_of_elems];
 
@@ -61,7 +61,8 @@ int main (int argc, const char * argv[])
     // assign sorted array into new int arrIndex
     (*array).left = 0;
     // assign half the size of array to arrayOutdex
-    (*array).right = middle - 1;
+    //(*array).right = middle - 1;
+    (*array).right = num_of_elems - 1;
     // merge array using specific thread
     pthread_create(&threads[2], 0, merger, array); // (3/3) threads
 
@@ -86,13 +87,14 @@ void *sorter(void *params)
     int r = (*array).right;
     //printf("left: %d right: %d", l, r);
     // 3. Hand off to sorting algorithm.
-    InsertionSort(array, l, r);
+    //InsertionSort(array, l, r);
 
     // loop to store both sorted arrays into final_arr
     int x;
     for(x=l; x<=r; x++)
     {
         final_arr[x]=orig_arr[x] ;
+        //printf("%d ", final_arr[x]);
     }
 
     pthread_exit(0);
@@ -115,6 +117,7 @@ void InsertionSort(arr *array, int l, int r) {
     }
 }
 
+
 /**
  * Merge thread
  */
@@ -126,7 +129,7 @@ void *merger(void *params)
 
     // assign pointer variables from arr
     int start = p -> left;
-    int stop = p ->  right + 1;
+    int stop = p ->  right;//+ 1;
     // initialize blank variables for loop and index swapping
     int i;
     int j;

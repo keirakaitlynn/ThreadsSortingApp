@@ -93,7 +93,7 @@ void *sorter(void *params)
     for(x=l; x<=r; x++)
     {
         final_arr[x]=orig_arr[x] ;
-        printf("%d ", final_arr[x]);
+        //printf("%d ", final_arr[x]);
     }
     pthread_exit(0);
 }

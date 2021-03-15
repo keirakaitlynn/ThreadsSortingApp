@@ -9,8 +9,8 @@
 
 const int num_of_threads = 3;
 
-//int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
-int orig_arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8};
+int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
+//int orig_arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8};
 #define num_of_elems 10
 int final_arr[num_of_elems];
 
@@ -28,7 +28,7 @@ void InsertionSort(arr *array, int l, int r);
 int main (int argc, const char * argv[])
 {
     // ORIGINAL ARRAY:
-    printf("ORIGINAL ARRAY: { ");
+    printf("ORIGINAL ARRAY:            { ");
     int i;
     for (i = 0; i < num_of_elems; i++) {
         printf("%d ", orig_arr[i]);
@@ -150,7 +150,7 @@ void *merger(void *params)
     }
     int a;
     // print final array
-    printf("Final sorted merged array:{");
+    printf("Final sorted merged array: { ");
 
     for(a=0; a < num_of_elems; a++)
     {

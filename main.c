@@ -9,7 +9,8 @@
 
 const int num_of_threads = 3;
 
-int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
+//int orig_arr[] = {20, 10, 2, 7, 19, 21, 25, 57, 89, 33};
+int orig_arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8};
 #define num_of_elems 10
 int final_arr[num_of_elems];
 
@@ -26,21 +27,21 @@ void InsertionSort(arr *array, int l, int r);
 
 int main (int argc, const char * argv[])
 {
-	// ORIGINAL ARRAY:
-	printf("ORIGINAL ARRAY: { ");
-	int i;
-	for (i = 0; i < num_of_elems; i++) {
-	    printf("%d ", orig_arr[i]);
-	}
-	printf("}\n");
+    // ORIGINAL ARRAY:
+    printf("ORIGINAL ARRAY: { ");
+    int i;
+    for (i = 0; i < num_of_elems; i++) {
+        printf("%d ", orig_arr[i]);
+    }
+    printf("}\n");
 
     pthread_t threads[num_of_threads]; // 3 threads total
     int middle = (num_of_elems / 2);
 
     // 1. thread to sort first half
     arr* array = (arr *) malloc(num_of_elems / sizeof(arr)*2);
-    (*array).left = 0; // first index
-    (*array).right = middle - 1; // midpoint
+    (*array).left = 0; // first index - 0
+    (*array).right = (middle - 1); // midpoint - 4
     pthread_create(&threads[0], 0, sorter, array); // (1/3) threads
 
     // 2. thread to sort second half
@@ -77,19 +78,21 @@ int main (int argc, const char * argv[])
 
 void *sorter(void *params)
 {
-	// TODO: Your code here
+    // TODO: Your code here
     // 1. Cast void* ("params") to arr*
-	arr* array = (arr*) params;
-	// 2. Set left & right indices.
-	int l = (*array).left;
-	int r = (*array).right + 1;
-	// 3. Hand off to sorting algorithm.
+    arr* array = (arr*) params;
+    // 2. Set left & right indices.
+    int l = (*array).left;
+    int r = (*array).right;
+    //printf("left: %d right: %d", l, r);
+    // 3. Hand off to sorting algorithm.
     InsertionSort(array, l, r);
 
+    // loop to store both sorted arrays into final_arr
     int x;
-    for(x=l; x<r; x++)
+    for(x=l; x<=r; x++)
     {
-            final_arr[x]=orig_arr[x] ;
+        final_arr[x]=orig_arr[x] ;
     }
 
     pthread_exit(0);
@@ -100,7 +103,7 @@ void InsertionSort(arr *array, int l, int r) {
     for (int i = l + 1; i <= r; i++) { // kkkkk: i depends on right
         int j, temp = orig_arr[i]; // make a copy of a[i] // NOTE: does not increase with length of the array, since these values get thrown away after every iteration ---> doesn't need any memory (O(n)) or "in place"
         // kkkkk: takes value & shifts it to the left until it is in the right spot.
-        for (j = i - 1; j >= 0; j--) { // start "moving left" // NOTE: j depends on i, and i depnds on right
+        for (j = i - 1; j >= 0; j--) { // start "moving left" // NOTE: j depends on i, and i depends on right
             if (orig_arr[j] > temp) {
                 orig_arr[j + 1] = orig_arr[j]; // inversion detected; move a[j] to the right
             }
@@ -121,19 +124,20 @@ void *merger(void *params)
 {
     arr* p = (arr *)params;
 
-    //MERGE
+    // assign pointer variables from arr
     int start = p -> left;
     int stop = p ->  right + 1;
+    // initialize blank variables for loop and index swapping
     int i;
     int j;
     int k;
 
-    // if index is less than end point, move on
+    // for loop to read through both lists
     for(i=start; i< stop; i++)
     {
         for(j=start; j< stop-i; j++)
         {
-            if(final_arr[j] > final_arr[j+1])
+            if(final_arr[j] > final_arr[j+1])// if current position is greater than next position, swap
             {
                 // set new point to current sorted index
                 k = final_arr[j];
@@ -147,6 +151,7 @@ void *merger(void *params)
     int a;
     printf("\n");
 
+    // print final array
     for(a=0; a < num_of_elems; a++)
     {
         printf("Final sorted array is: %d\n", final_arr[a]);

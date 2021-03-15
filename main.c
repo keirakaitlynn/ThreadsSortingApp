@@ -58,10 +58,9 @@ int main (int argc, const char * argv[])
     // 3. thread to merge halves into final_arr
     // allocate size of thread
     array = (arr *) malloc(num_of_elems / sizeof(arr)*2);
-    // assign sorted array into new int arrIndex
+    // assign start position
     (*array).left = 0;
-    // assign half the size of array to arrayOutdex
-    //(*array).right = middle - 1;
+    // assign half the size of right
     (*array).right = num_of_elems - 1;
     // merge array using specific thread
     pthread_create(&threads[2], 0, merger, array); // (3/3) threads
@@ -96,8 +95,6 @@ void *sorter(void *params)
         final_arr[x]=orig_arr[x] ;
         printf("%d ", final_arr[x]);
     }
-    //printf("\n");
-
     pthread_exit(0);
 }
 
@@ -126,23 +123,20 @@ void *merger(void *params)
 {
     arr* p = (arr *)params;
 
-    //MERGE
+    // assign pointer variables from arr
     int start = p -> left;
     int stop = p ->  right;
-    // 2. Set left & right indices.
-	// int l = (*array).left;
-	// int r = (*array).right;
-    // int middle = (l + r)/2;
+    // initialize blank variables for loop and index swapping
     int i;
     int j;
     int k;
 
-    // if index is less than end point, move on
+   // for loop to read through the array
     for(i=start; i< stop; i++)
     {
         for(j=start; j< stop-i; j++)
         {
-            if(final_arr[j] > final_arr[j+1])
+            if(final_arr[j] > final_arr[j+1])// if current position is greater than next position, swap
             {
                 // set new point to current sorted index
                 k = final_arr[j];
@@ -154,6 +148,7 @@ void *merger(void *params)
         }
     }
     int a;
+    // print final array
     printf("Final sorted merged array: { ");
     
     for(a=0; a < num_of_elems; a++)

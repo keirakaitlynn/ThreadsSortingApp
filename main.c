@@ -149,12 +149,13 @@ void *merger(void *params)
         }
     }
     int a;
-    printf("\n");
-
     // print final array
+    printf("Final sorted merged array:{");
+
     for(a=0; a < num_of_elems; a++)
     {
-        printf("Final sorted array is: %d\n", final_arr[a]);
+        printf("%d ", final_arr[a]);
     }
+    printf("}\n");
     pthread_exit(0);
 }
